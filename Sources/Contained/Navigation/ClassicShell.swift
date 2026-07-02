@@ -83,7 +83,7 @@ private struct AppSidebar: View {
                 let sections = AppSection.navigableSections(panelNavigationEnabled: ui.panelNavigationEnabled)
                     .filter { $0.group == group && isVisible($0) }
                 if !sections.isEmpty {
-                    Section(group.rawValue) {
+                    Section {
                         ForEach(sections) { section in
                         Label {
                             HStack {
@@ -100,6 +100,17 @@ private struct AppSidebar: View {
                         }
                         .tag(section)
                         }
+                    } header: {
+                        // Pin the header's leading inset explicitly. The default `.sidebar` section
+                        // header inset collapses to a negative offset at certain column widths while
+                        // resizing, clipping the first character off the window's left edge.
+                        Text(group.rawValue)
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .listRowInsets(EdgeInsets(top: Tokens.Space.s,
+                                                      leading: Tokens.Space.m,
+                                                      bottom: Tokens.Space.xs,
+                                                      trailing: Tokens.Space.m))
                     }
                 }
             }
