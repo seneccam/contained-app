@@ -7,8 +7,8 @@ public struct RegistryImageReference: Sendable, Hashable {
     public let reference: String
     public let isDigestReference: Bool
 
-    public var manifestURL: URL {
-        URL(string: "https://\(registry)/v2/\(repository)/manifests/\(reference)")!
+    public var manifestURL: URL? {
+        URL(string: "https://\(registry)/v2/\(repository)/manifests/\(reference)")
     }
 
     public var authScope: String { "repository:\(repository):pull" }

@@ -2,6 +2,7 @@ import Foundation
 
 public enum RegistryManifestError: Error, LocalizedError, Equatable {
     case invalidResponse
+    case invalidReference
     case unauthorized
     case notFound
     case missingDigest
@@ -11,6 +12,7 @@ public enum RegistryManifestError: Error, LocalizedError, Equatable {
     public var errorDescription: String? {
         switch self {
         case .invalidResponse: return "The registry returned an invalid response."
+        case .invalidReference: return "The image reference could not be turned into a valid registry URL."
         case .unauthorized: return "The registry requires authentication."
         case .notFound: return "The image or tag was not found."
         case .missingDigest: return "The registry response did not include a content digest."
@@ -42,7 +44,8 @@ public struct RegistryManifestClient: Sendable {
     }
 
     private func manifestResponse(for ref: RegistryImageReference, bearerToken: String?) async throws -> ManifestResponse {
-        var request = URLRequest(url: ref.manifestURL)
+        guard let manifestURL = ref.manifestURL else { throw RegistryManifestError.invalidReference }
+        var request = URLRequest(url: manifestURL)
         request.httpMethod = "HEAD"
         request.setValue(Self.acceptHeader, forHTTPHeaderField: "Accept")
         if let bearerToken {

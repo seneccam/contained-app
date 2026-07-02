@@ -27,7 +27,20 @@ struct LiveSparkline: View {
 
     private var chart: some View {
         Chart {
-            switch style {
+            marks
+        }
+        .chartXAxis(.hidden)
+        .chartYAxis(.hidden)
+        .chartLegend(.hidden)
+        .chartYScale(domain: 0...1)
+        .chartPlotStyle { plot in
+            plot.background(Color.clear)
+        }
+    }
+
+    @ChartContentBuilder
+    private var marks: some ChartContent {
+        switch style {
             case .area:
                 ForEach(primaryPoints) { point in
                     AreaMark(x: .value("Sample", point.index), y: .value("Value", point.value))
@@ -86,14 +99,6 @@ struct LiveSparkline: View {
                         .symbolSize(pointSize)
                 }
             }
-        }
-        .chartXAxis(.hidden)
-        .chartYAxis(.hidden)
-        .chartLegend(.hidden)
-        .chartYScale(domain: 0...1)
-        .chartPlotStyle { plot in
-            plot.background(.clear)
-        }
     }
 
     private var baseline: some View {
