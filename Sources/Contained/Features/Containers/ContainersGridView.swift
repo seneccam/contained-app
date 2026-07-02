@@ -332,6 +332,11 @@ struct ContainersGridView: View {
                     )
                 }
             )
+            // Resolve each cell's position+size as one atomic unit. The `.balanced` split view
+            // animates the detail column width on sidebar resize; without this, each card's
+            // position and size interpolate on independent curves and neighbouring cards slide
+            // over one another mid-animation.
+            .geometryGroup()
     }
 
     private func compactCard(_ snapshot: ContainerSnapshot) -> some View {
